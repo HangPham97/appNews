@@ -1,5 +1,3 @@
-import json
-# import time
 from datetime import datetime
 
 import scrapy
@@ -16,7 +14,7 @@ class BikaeSpider(scrapy.Spider):
 
     custom_settings = {
         'ITEM_PIPELINES': {
-            # 'appNews.pipelines.DuplicatesPipeline': 100,
+            'appNews.pipelines.DuplicatesPipeline': 100,
             # 'appNews.pipelines.ImagePipeline': 200,
             'appNews.pipelines.SQLPipeline': 300,
         },
@@ -54,8 +52,8 @@ class BikaeSpider(scrapy.Spider):
             item['title'] = sel.xpath('.//h1[@class="entry-title"]//text()').extract_first('').strip()
             item['cover_origin'] = sel.xpath('.//div[contains(@class,"toppage-post-feature-img")]//@src').extract_first('').strip()
             item['desc'] = sel.xpath('.//div[@class="toppage-post-excerpt"]/div/text()[1]').extract_first('').strip()
-            item['category'] = response.xpath('//strong[@class="breadcrumb_last"]').extract_first('').strip()
-            item['author'] = response.xpath('.//span[@class="byline"]').extract_first('').strip()
+            item['category'] = response.xpath('//strong[@class="breadcrumb_last"]/text()').extract_first('').strip()
+            item['author'] = response.xpath('.//span[@class="author vcard"]//text()').extract_first('').strip()
             post_time_full = sel.xpath('.//time[1]/@datetime').extract_first('').strip()
             post_time = post_time_full[:10]
             item['post_time'] = datetime.strptime(post_time, '%Y-%m-%d')
@@ -64,6 +62,7 @@ class BikaeSpider(scrapy.Spider):
             yield request
         next_page = response.xpath('//div[@class="nav-next"]//@href')
         if next_page:
+            url = next_page.extract_first().strip()
             yield scrapy.Request(url, callback=self.parse)
 
     def parse_data(self, response):

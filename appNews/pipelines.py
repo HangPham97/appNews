@@ -16,18 +16,18 @@ from appNews.models import session, Article
 
 from appNews import settings
 
-# class DuplicatesPipeline(object):
+class DuplicatesPipeline(object):
 
-#     def __init__(self):
-#         self.ids_seen = set([t.lid for t in session.query(Article).all()])
+    def __init__(self):
+        self.ids_seen = set([t.lid for t in session.query(Article).all()])
 
-#     def process_item(self, item, spider):
-#         if item['lid'] in self.ids_seen:
-#             spider.logger.info("Drop duplicate item: {}".format(item["lid"]))
-#             raise DropItem("Duplicate item found: {}".format(item["lid"]))
-#         else:
-#             self.ids_seen.add(item['lid'])
-#             return item
+    def process_item(self, item, spider):
+        if item['lid'] in self.ids_seen:
+            spider.logger.info("Drop duplicate item: {}".format(item["lid"]))
+            raise DropItem("Duplicate item found: {}".format(item["lid"]))
+        else:
+            self.ids_seen.add(item['lid'])
+            return item
 # class ImagePipeline(object):
 #     def close_spider(self, spider):
 #         session.close()
@@ -80,25 +80,26 @@ class SQLPipeline(object):
         return item
 
     def __get_article(self, item):
-        #article = session.query(Article).filter(
-        #    Article.lid == item.get("lid")).first()
+        article = session.query(Article).filter(
+           Article.lid == item.get("lid")).first()
         
-        #if article:
-        #    return article, True
+        if article:
+           return article, True
 
         article = Article()
 
-        article.supercid = item.get('supercid')
-        article.cid = item.get('cid')
+        # article.supercid = item.get('supercid')
+        article.category = item.get('category')
+        article.author = item.get('author')
         article.lid = item.get('lid')
 
-        article.sid = item.get('sid')
+        # article.sid = item.get('sid')
         article.sid_text = item.get('sid_text')     # FIXME: Remove
         article.url = item.get('url')
 
         article.title = item.get('title')
         article.post_time = item.get('post_time')
-        article.post_time_text = item.get('post_time_text')   # FIXME: Remove
+        # article.post_time_text = item.get('post_time_text')   # FIXME: Remove
         article.content = item.get('content')
         article.desc = item.get('desc')
         article.cover = item.get('cover')

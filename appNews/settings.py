@@ -29,7 +29,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -67,7 +67,7 @@ DOWNLOAD_DELAY = 3
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   # 'appNews.pipelines.DuplicatesPipeline': 300,
+   'appNews.pipelines.DuplicatesPipeline': 300,
    'appNews.pipelines.SQLPipeline': 350,
 }
 
@@ -107,5 +107,5 @@ DATABASE = {
    'port': env("DB_PORT", "3306"),
    'username': env("DB_USER", "dev"),
    'password': env("DB_PASS", "dev123"),
-   'db_name': env("DB_NAME", "news")
+   'db_name': env("DB_NAME", "news"),
 }

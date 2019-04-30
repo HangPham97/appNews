@@ -47,7 +47,8 @@ engin_url = sqlalchemy.engine.url.URL(
     port=DATABASE["port"],
     username=DATABASE["username"],
     password=DATABASE["password"],
-    database=DATABASE["db_name"]
+    database=DATABASE["db_name"],
+   query={'charset': 'utf8'},  # the key-point setting
 )
 
 db_engine = create_engine(
